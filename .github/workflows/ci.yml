@@ -1,4 +1,4 @@
-name: Build and Push to Docker Hub
+name: CI Pipeline
 
 on:
   push:
@@ -49,6 +49,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/next-js-cicd:latest
-
