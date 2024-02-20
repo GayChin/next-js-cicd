@@ -3,6 +3,13 @@ FROM node:20-alpine AS base
 RUN apk add --no-cache g++ make py3-pip libc6-compat
 WORKDIR /app
 COPY package*.json ./
+
+# Create .env.local
+ARG NEXT_PUBLIC_FOO
+RUN touch .env.local
+RUN echo "NEXT_PUBLIC_API_ENDPOINT=$NEXT_PUBLIC_API_ENDPOINT" >> .env.local
+RUN cat .env.local
+
 EXPOSE 3000
 
 FROM base as builder
@@ -31,11 +38,6 @@ CMD npm start
 # If choose to build the image in production
 FROM base as dev
 ENV NODE_ENV=development
-# Create .env.local
-ARG NEXT_PUBLIC_FOO
-RUN touch .env.local
-RUN echo "NEXT_PUBLIC_API_ENDPOINT=$NEXT_PUBLIC_API_ENDPOINT" >> .env.local
-RUN cat .env.local
 RUN npm install 
 COPY . .
 CMD npm run dev
